@@ -1,6 +1,35 @@
 #!/usr/bin/python3
 
+"""
+This is simple tool, which can extract users and user's NTLM hashes
+From running secretsdump.py. This tool replace the usage of some hand matching users + passwords
+Or running Excell to match the proper user + password.
+During running, it creates few files in order to combine all users with the proper password.
+In a given moment you must supply the script with the cracked password and credentials.
+This was tested with hashcat.
+After supplying the script, it will generate a file with the proper user and its password.
+Finally, it will remove all other files it creates during running the script.
+Feel free to make the script better.
+"""
+
 import re
+import argparse
+import os
+
+
+def get_argument():
+    """
+    We specify the argument for the file we will add to the script
+    """
+    parser = argparse.ArgumentParser(description="Getting NTLM hashes from secretsdump.py")
+    parser.add_argument("-f", "--file", dest="text_file", help="Fill the text file with the NTLM hashes")
+
+    file_hashes = parser.parse_args()
+
+    if not file_hashes.text_file:
+        parser.error("[-] Provide the text file with the hashes")
+
+    return file_hashes
 
 
 def placing_passwd(pswd_input):
@@ -82,7 +111,9 @@ def get_clean_hash(file):
 
 def main():
     total_result = []
-    get_clean_hash("ntlm.txt")
+    file = get_argument()
+
+    get_clean_hash(file.text_file)
     print("Enter the result from cracking tool:")
     while True:
         result = input()
@@ -91,6 +122,11 @@ def main():
         total_result.append(result)
 
     writing_end_file(placing_passwd(total_result))
+
+    if os.path.exists(".\\usr_psw.txt"):
+        os.remove("usr_psw.txt")
+    if os.path.exists(".\\nt_hashes.txt"):
+        os.remove("nt_hashes.txt")
 
 
 main()
