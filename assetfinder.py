@@ -20,7 +20,12 @@ name_of_file = parsed_args.url
 with open(f"{name_of_file}.txt", "w") as f:
     output_list = output.replace("\n", ":").split(":")
 
+    unique_urls = set()
+
     for url in output_list:
         if parsed_args.url in url:
-            f.write(url + "\n")
+            unique_urls.add(url)
+
+    for unique_url in unique_urls:
+        f.write(unique_url + "\n")
 
