@@ -123,9 +123,9 @@ def main():
 
     writing_end_file(placing_passwd(total_result))
 
-    if os.path.exists(".\\usr_psw.txt"):
+    if os.path.exists("usr_psw.txt"):
         os.remove("usr_psw.txt")
-    if os.path.exists(".\\nt_hashes.txt"):
+    if os.path.exists("nt_hashes.txt"):
         os.remove("nt_hashes.txt")
 
 
