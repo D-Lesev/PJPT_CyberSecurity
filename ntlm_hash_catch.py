@@ -36,10 +36,12 @@ def placing_passwd(pswd_input):
     dict_usr_psw = {}
     with open("usr_psw.txt", "r") as f:
         content = f.readlines()
-        for row in content:
-            usr = row.split(" ")[0]
-            psw = row.split(" ")[1].rstrip()
-            dict_usr_psw[usr] = psw
+        # for row in content:
+        #     usr = row.split(" ")[0]
+        #     psw = row.split(" ")[1].rstrip()
+        #     dict_usr_psw[usr] = psw
+
+        dict_usr_psw = {row.split()[0]: row.split()[1].rstrip() for row in content}
 
     end_result = {}
     for row in pswd_input:
@@ -57,14 +59,17 @@ def writing_end_file(results):
         for k, v in results.items():
             f.write(f"{k} -> {v}\n")
 
+    print("[+] File 'credentials.txt' is created.\nDecrypted password and usernames are inside.")
+
 
 def writing_usr_psw(dict_input):
     with open("usr_psw.txt", "w") as f:
-        for k, v in dict_input.items():
-            usr = k
-            ntlm_hash = v
-            f.write(f"{usr} {ntlm_hash}\n")
-    print("Done writing full file")
+        f.write("\n".join(f"{k} {v}" for k, v in dict_input.items()))
+        # for k, v in dict_input.items():
+        #     usr = k
+        #     ntlm_hash = v
+        #     f.write(f"{usr} {ntlm_hash}\n")
+    print("[+] Done writing full file!")
 
 
 def writing_nt_hash(ntlm_hash):
@@ -90,7 +95,7 @@ def separate_hash(hashes):
         writing_nt_hash(ntlm_hash)
     writing_usr_psw(usr_no_psw)
 
-    print("Done")
+    print("[+] Separating hash: Done!")
 
 
 def get_clean_hash(file):
@@ -114,7 +119,8 @@ def main():
     file = get_argument()
 
     get_clean_hash(file.text_file)
-    print("Enter the result from cracking tool:")
+    print("[!] Use file 'nt_hashes.txt' in cracking tool to decrypt the hashes.")
+    print("[!] Enter the result from cracking tool along with the hash nad password")
     while True:
         result = input()
         if not result:
